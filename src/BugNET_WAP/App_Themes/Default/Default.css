@@ -1442,8 +1442,14 @@ ul.permissions li
 	z-index: 666;
 	zoom: 1;
 	overflow: hidden;
-	white-space: nowrap;
+	/*white-space: nowrap;*/
 }
+.scrollableDiv
+{
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
 .scrollable
 {
 	background: #EDECD1;
@@ -1625,7 +1631,3 @@ ul.permissions li
     padding:0px;
     line-height:18px;
 }
-
-
-
-

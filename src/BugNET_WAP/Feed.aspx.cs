@@ -38,12 +38,12 @@ namespace BugNET
                 ChannelId = Convert.ToInt32(Request.Params["channel"]);
 
             //Security Checks
-            if (!User.Identity.IsAuthenticated && ProjectManager.GetProjectById(ProjectId).AccessType == Globals.ProjectAccessType.Private)
+            if (!User.Identity.IsAuthenticated && ProjectManager.GetById(ProjectId).AccessType == Globals.ProjectAccessType.Private)
                 Response.Redirect("~/Errors/AccessDenied.aspx", true);
-            else if (User.Identity.IsAuthenticated && ProjectManager.GetProjectById(ProjectId).AccessType == Globals.ProjectAccessType.Private && !ProjectManager.IsUserProjectMember(User.Identity.Name, ProjectId))
+            else if (User.Identity.IsAuthenticated && ProjectManager.GetById(ProjectId).AccessType == Globals.ProjectAccessType.Private && !ProjectManager.IsUserProjectMember(User.Identity.Name, ProjectId))
                 Response.Redirect("~/Errors/AccessDenied.aspx", true);
 
-            ProjectName = ProjectManager.GetProjectById(ProjectId).Name;
+            ProjectName = ProjectManager.GetById(ProjectId).Name;
 
             // Determine whether we're outputting an Atom or RSS feed
             bool outputRss = (Request.QueryString["Type"] == "RSS");
@@ -280,9 +280,9 @@ namespace BugNET
         /// </summary>
         private void MilestoneFeed(ref SyndicationFeed feed)
         {
-            List<IssueCount> lsVersion = IssueManager.GetIssueMilestoneCountByProject(ProjectId);
+            List<IssueCount> lsVersion = IssueManager.GetMilestoneCountByProjectId(ProjectId);
             List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueCountList(lsVersion);
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("IssuesByMilestoneTitle").ToString(),p.Name));
             feed.Description = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("IssuesByMilestoneDescription").ToString(), p.Name));
             feed.Items = feedItems;
@@ -294,8 +294,8 @@ namespace BugNET
         /// <param name="feed">The feed.</param>
         private void AllIssuesFeed(ref SyndicationFeed feed)
         {
-            List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueList(IssueManager.GetIssuesByProjectId(ProjectId));
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueList(IssueManager.GetByProjectId(ProjectId));
+            Project p = ProjectManager.GetById(ProjectId);
 
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("AllIssuesTitle").ToString(), p.Name));
             feed.Description = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("AllIssuesDescription").ToString(),p.Name));
@@ -312,7 +312,7 @@ namespace BugNET
             List<Category> al = objComps.GetCategoryTreeByProjectId(ProjectId);
 
             List<SyndicationItem> feedItems = new List<SyndicationItem>();
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             foreach (Category c in al)
             {
@@ -320,7 +320,7 @@ namespace BugNET
 
                 item.Title = TextSyndicationContent.CreatePlaintextContent(c.Name);
                 item.Links.Add(SyndicationLink.CreateAlternateLink(new Uri(GetFullyQualifiedUrl(string.Format("~/Issues/IssueList.aspx?pid={0}&s=0&c={1}", ProjectId, c.Id)))));
-                item.Summary = TextSyndicationContent.CreatePlaintextContent(string.Concat(IssueManager.GetIssueCountByProjectAndCategory(ProjectId, c.Id).ToString(), GetLocalResourceObject("OpenIssues").ToString()));
+                item.Summary = TextSyndicationContent.CreatePlaintextContent(string.Concat(IssueManager.GetCountByProjectAndCategoryId(ProjectId, c.Id).ToString(), GetLocalResourceObject("OpenIssues").ToString()));
                 item.PublishDate = DateTime.Now;
                 // Add the item to the feed
                 feedItems.Add(item);
@@ -335,9 +335,9 @@ namespace BugNET
         /// </summary>
         private void StatusFeed(ref SyndicationFeed feed)
         {
-            List<IssueCount> al = IssueManager.GetIssueStatusCountByProject(ProjectId);
+            List<IssueCount> al = IssueManager.GetStatusCountByProjectId(ProjectId);
             List<SyndicationItem> feedItems = new List<SyndicationItem>();
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             feedItems = CreateSyndicationItemsFromIssueCountList(al);    
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("IssuesByStatusTitle").ToString(), p.Name));
@@ -351,9 +351,9 @@ namespace BugNET
         /// <param name="feed">The feed.</param>
         private void PriorityFeed(ref SyndicationFeed feed)
         {
-            List<IssueCount> al = IssueManager.GetIssuePriorityCountByProject(ProjectId);
+            List<IssueCount> al = IssueManager.GetPriorityCountByProjectId(ProjectId);
             List<SyndicationItem> feedItems = new List<SyndicationItem>();
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             feedItems = CreateSyndicationItemsFromIssueCountList(al);
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("IssuesByPriorityTitle").ToString(), p.Name));
@@ -367,9 +367,9 @@ namespace BugNET
         /// <param name="feed">The feed.</param>
         private void TypeFeed(ref SyndicationFeed feed)
         {
-            List<IssueCount> al = IssueManager.GetIssueTypeCountByProject(ProjectId);
+            List<IssueCount> al = IssueManager.GetTypeCountByProjectId(ProjectId);
             List<SyndicationItem> feedItems = new List<SyndicationItem>();
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             feedItems = CreateSyndicationItemsFromIssueCountList(al);
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("IssuesByIssueTypeTitle").ToString(), p.Name));
@@ -383,8 +383,8 @@ namespace BugNET
         /// <param name="feed">The feed.</param>
         private void AssignedFeed(ref SyndicationFeed feed)
         {
-            List<Issue> issues = IssueManager.GetIssuesByAssignedUserName(ProjectId, User.Identity.Name);
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            List<Issue> issues = IssueManager.GetByAssignedUserName(ProjectId, User.Identity.Name);
+            Project p = ProjectManager.GetById(ProjectId);
             List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueList(issues);
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("AssignedIssuesTitle").ToString(), p.Name));
             feed.Description = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("AssignedIssuesDescription").ToString(), Security.GetDisplayName()));
@@ -461,7 +461,7 @@ namespace BugNET
             //queryClauses.Add(q);
             List<Issue> issueList = IssueManager.PerformQuery(queryClauses, ProjectId);
             List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueList(issueList);
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("FilteredIssuesTitle").ToString(), p.Name));
             feed.Description = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("FilteredIssuesDescription").ToString(), p.Name));
@@ -475,9 +475,9 @@ namespace BugNET
         /// <param name="feed">The feed.</param>
         private void RelevantFeed(ref SyndicationFeed feed)
         {
-            List<Issue> issueList = IssueManager.GetIssuesByRelevancy(ProjectId, User.Identity.Name);
+            List<Issue> issueList = IssueManager.GetByRelevancy(ProjectId, User.Identity.Name);
             List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueList(issueList);
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("RelevantIssuesTitle").ToString(), p.Name));
             feed.Description = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("RelevantIssuesDescription").ToString(), p.Name));
@@ -490,9 +490,9 @@ namespace BugNET
         /// <param name="feed">The feed.</param>
         private void OwnedFeed(ref SyndicationFeed feed)
         {
-            List<Issue> issueList = IssueManager.GetIssuesByOwnerUserName(ProjectId, User.Identity.Name);
+            List<Issue> issueList = IssueManager.GetByOwnerUserName(ProjectId, User.Identity.Name);
             List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueList(issueList);
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("OwnedIssuesTitle").ToString(), p.Name));
             feed.Description = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("OwnedIssuesDescription").ToString(), p.Name));
@@ -507,7 +507,7 @@ namespace BugNET
         {
             List<Issue> issueList = IssueManager.PerformSavedQuery(ProjectId, Convert.ToInt32(QueryId));
             List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueList(issueList);
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("SavedQueryTitle").ToString(), p.Name));
             feed.Description = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("SavedQueryDescription").ToString(), p.Name));
@@ -520,9 +520,9 @@ namespace BugNET
         /// <param name="feed">The feed.</param>
         private void CreatedFeed(ref SyndicationFeed feed)
         {
-            List<Issue> issueList = IssueManager.GetIssuesByCreatorUserName(ProjectId, User.Identity.Name);
+            List<Issue> issueList = IssueManager.GetByCreatorUserName(ProjectId, User.Identity.Name);
             List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueList(issueList);
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("CreatedIssuesTitle").ToString(), p.Name));
             feed.Description = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("CreatedIssuesDescription").ToString(), p.Name));
@@ -535,9 +535,9 @@ namespace BugNET
         /// <param name="feed">The feed.</param>
         private void AssigneeFeed(ref SyndicationFeed feed)
         {
-            List<IssueCount> al = IssueManager.GetIssueUserCountByProject(ProjectId);
+            List<IssueCount> al = IssueManager.GetUserCountByProjectId(ProjectId);
             List<SyndicationItem> feedItems = CreateSyndicationItemsFromIssueCountList(al);
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             feed.Title = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("AssigneeTitle").ToString(), p.Name));
             feed.Description = TextSyndicationContent.CreatePlaintextContent(string.Format(GetLocalResourceObject("AssigneeDescription").ToString(), p.Name));

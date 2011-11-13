@@ -81,7 +81,7 @@ namespace BugNET.MailboxReader
 
                 var mailIssue = IssueManager.GetDefaultIssueByProjectId(projectId, entry.Title.Trim(), body.Trim(), entry.ProjectMailbox.AssignToUserName, this._ReportingUserName);
 
-                if (IssueManager.SaveIssue(mailIssue))
+                if (IssueManager.SaveOrUpdate(mailIssue))
                 {
                     //If there is an attached file present then add it to the database 
                     //and copy it to the directory specified in the web.config file
@@ -177,7 +177,7 @@ namespace BugNET.MailboxReader
                             if (pmbox != null)
                             {
                                 MailboxEntry entry = new MailboxEntry();
-                                Project project = ProjectManager.GetProjectById(pmbox.ProjectId);
+                                Project project = ProjectManager.GetById(pmbox.ProjectId);
 
                                 //TODO: Enhancements could include regex / string matching or not matching 
                                 //for particular strings values in the subject or body.
