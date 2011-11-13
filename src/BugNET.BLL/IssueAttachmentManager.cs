@@ -37,8 +37,8 @@ namespace BugNET.BLL
             if (entity.Attachment.Length > 0)
             {
                 // save the file to the upload directory
-                var projectId = IssueManager.GetIssueById(entity.IssueId).ProjectId;
-                var p = ProjectManager.GetProjectById(projectId);
+                var projectId = IssueManager.GetById(entity.IssueId).ProjectId;
+                var p = ProjectManager.GetById(projectId);
 
                 if (p.AllowAttachments)
                 {
@@ -161,8 +161,8 @@ namespace BugNET.BLL
         public static bool Delete(int issueAttachmentId)
         {
             var att = GetById(issueAttachmentId);
-            var b = IssueManager.GetIssueById(att.IssueId);
-            var p = ProjectManager.GetProjectById(b.ProjectId);
+            var b = IssueManager.GetById(att.IssueId);
+            var p = ProjectManager.GetById(b.ProjectId);
 
             if (DataProviderManager.Provider.DeleteIssueAttachment(issueAttachmentId))
             {
@@ -373,8 +373,8 @@ namespace BugNET.BLL
         //        if (isFileOk)
         //        {
         //            // save the file to the upload directory
-        //            int projectId = IssueManager.GetIssueById(issueId).ProjectId;
-        //            Project p = Project.GetProjectById(projectId);
+        //            int projectId = IssueManager.GetById(issueId).ProjectId;
+        //            Project p = Project.GetById(projectId);
 
         //            if (p.AllowAttachments)
         //            {

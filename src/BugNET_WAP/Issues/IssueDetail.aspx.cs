@@ -22,7 +22,7 @@ namespace BugNET.Issues
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void Page_Load(object sender, System.EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
 
             if (!Page.IsPostBack)
@@ -30,31 +30,8 @@ namespace BugNET.Issues
                 lnkDelete.Attributes.Add("onclick", string.Format("return confirm('{0}');", GetLocalResourceObject("DeleteIssue")));
                 imgDelete.Attributes.Add("onclick", string.Format("return confirm('{0}');", GetLocalResourceObject("DeleteIssue")));
 
-                // Get Issue Id from Query String
-                if (Request.QueryString["id"] != null)
-                { 
-                    try
-                    {
-                        IssueId = Int32.Parse(Request.QueryString["id"]);
-                    }
-                    catch
-                    {
-                        ErrorRedirector.TransferToNotFoundPage(Page);
-                    }
-                }
-
-                // Get Project Id from Query String
-                if (Request.QueryString["pid"] != null)
-                { 
-                    try
-                    {
-                        ProjectId = Int32.Parse(Request.QueryString["pid"]);
-                    }
-                    catch
-                    {
-                        ErrorRedirector.TransferToNotFoundPage(Page);
-                    }
-                }
+                IssueId = Request.QueryString.Get("id", 0);
+                ProjectId = Request.QueryString.Get("pid", 0);
 
                 // If don't know project or issue then redirect to something missing page
                 if (ProjectId == 0 && IssueId == 0)
@@ -70,8 +47,7 @@ namespace BugNET.Issues
                     Description.Visible = false;
                     TitleLabel.Visible = false;
                     DisplayTitleLabel.Visible = false;
-                    string test = GetLocalResourceObject("PageTitleNewIssue").ToString();
-                    Page.Title = test;
+                    Page.Title = GetLocalResourceObject("PageTitleNewIssue").ToString();
                     lblIssueNumber.Text = "N/A";
                     VoteButton.Visible = false;
                 }
@@ -102,11 +78,10 @@ namespace BugNET.Issues
 
             // The ExpandIssuePaths method is called to handle
             // the SiteMapResolve event.
-            SiteMap.SiteMapResolve += new SiteMapResolveEventHandler(this.ExpandIssuePaths);
+            SiteMap.SiteMapResolve += ExpandIssuePaths;
 
             ctlIssueTabs.IssueId = IssueId;
             ctlIssueTabs.ProjectId = ProjectId;
-
         }
 
         /// <summary>
@@ -116,7 +91,7 @@ namespace BugNET.Issues
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         protected void Page_PreRender(object sender, EventArgs e)
         {
-            Project p = ProjectManager.GetProjectById(ProjectId);
+            Project p = ProjectManager.GetById(ProjectId);
 
             if (p == null)
                 ErrorRedirector.TransferToNotFoundPage(Page);
@@ -150,7 +125,7 @@ namespace BugNET.Issues
             if (IssueId != 0)
             {
                 //private issue check
-                Issue issue = IssueManager.GetIssueById(IssueId);
+                Issue issue = IssueManager.GetById(IssueId);
 
                 if (issue.Visibility == (int)Globals.IssueVisibility.Private && issue.AssignedDisplayName != Security.GetUserName() && issue.CreatorDisplayName != Security.GetUserName() && !UserManager.IsInRole(Globals.SUPER_USER_ROLE) && !UserManager.IsInRole(Globals.ProjectAdminRole))
                     ErrorRedirector.TransferToLoginPage(Page);
@@ -198,7 +173,7 @@ namespace BugNET.Issues
             {
                 string title = (TitleTextBox.Text.Length >= 30) ? TitleTextBox.Text.Substring(0, 30) + " ..." : TitleTextBox.Text;
                 tempNode.Title = string.Format("{0}: {1}", lblIssueNumber.Text, title);
-                tempNode.Url = tempNode.Url + "?id=" + IssueId.ToString();
+                tempNode.Url = string.Concat(tempNode.Url, "?id=", IssueId);
             }
             else
                 tempNode.Title = "New Issue";
@@ -216,7 +191,7 @@ namespace BugNET.Issues
         /// </summary>
         private void BindValues()
         {
-            Issue currentIssue = IssueManager.GetIssueById(IssueId);
+            var currentIssue = IssueManager.GetById(IssueId);
 
             if (currentIssue == null)
             {
@@ -264,7 +239,7 @@ namespace BugNET.Issues
                 lblLoggedTime.Text = currentIssue.TimeLogged.ToString();
                 txtEstimation.Text = currentIssue.Estimation == 0 ? string.Empty : currentIssue.Estimation.ToString();
                 DueDatePicker.SelectedValue = currentIssue.DueDate == DateTime.MinValue ? null : (DateTime?)currentIssue.DueDate;
-                chkPrivate.Checked = currentIssue.Visibility == 0 ? false : true;
+                chkPrivate.Checked = currentIssue.Visibility != 0;
                 ProgressSlider.Text = currentIssue.Progress.ToString();
                 IssueVoteCount.Text = currentIssue.Votes.ToString();
 
@@ -354,16 +329,16 @@ namespace BugNET.Issues
         }
 
         /// <summary>
-        /// Saves the bug.
+        /// Saves the issue.
         /// </summary>
         /// <returns></returns>
         private bool SaveIssue()
         {
             decimal estimation;
             decimal.TryParse(txtEstimation.Text.Trim(), out estimation);
-            DateTime dueDate = DueDatePicker.SelectedValue == null ?  DateTime.MinValue : (DateTime)DueDatePicker.SelectedValue;
+            var dueDate = DueDatePicker.SelectedValue == null ?  DateTime.MinValue : (DateTime)DueDatePicker.SelectedValue;
 
-            bool NewIssue = (IssueId <= 0);
+            var isNewIssue = (IssueId <= 0);
 
             // WARNING: DO NOT ENCODE THE HTMLEDITOR TEXT. 
             // It expects raw input. So pass through a raw string. 
@@ -371,25 +346,65 @@ namespace BugNET.Issues
             // handle sanitizing the input and checking that its input is HtmlEncoded
             // (ie no < or > characters), not the IssueDetail.aspx.cs
 
-            Issue newIssue = new Issue(IssueId, ProjectId, string.Empty, string.Empty, Server.HtmlEncode(TitleTextBox.Text), DescriptionHtmlEditor.Text.Trim(),
-                DropCategory.SelectedValue, DropCategory.SelectedText, DropPriority.SelectedValue, DropPriority.SelectedText,
-                string.Empty, DropStatus.SelectedValue, DropStatus.SelectedText, string.Empty, DropIssueType.SelectedValue,
-                DropIssueType.SelectedText, string.Empty, DropResolution.SelectedValue, DropResolution.SelectedText, string.Empty,
-                DropAssignedTo.SelectedText, DropAssignedTo.SelectedValue, Guid.Empty, Security.GetDisplayName(),
-                Security.GetUserName(), Guid.Empty, DropOwned.SelectedText, DropOwned.SelectedValue, Guid.Empty, dueDate,
-                DropMilestone.SelectedValue, DropMilestone.SelectedText, string.Empty, null, DropAffectedMilestone.SelectedValue, DropAffectedMilestone.SelectedText,
-                string.Empty, chkPrivate.Checked == true ? 1 : 0,
-                0, estimation, DateTime.MinValue, DateTime.MinValue, Security.GetUserName(), Security.GetDisplayName(),
-                Convert.ToInt32(ProgressSlider.Text), false, 0);
+            var issue = new Issue
+                            {
+                                AffectedMilestoneId = DropAffectedMilestone.SelectedValue,
+                                AffectedMilestoneImageUrl = string.Empty,
+                                AffectedMilestoneName = DropAffectedMilestone.SelectedText,
+                                AssignedDisplayName = DropAssignedTo.SelectedText,
+                                AssignedUserId = Guid.Empty,
+                                AssignedUserName = DropAssignedTo.SelectedValue,
+                                CategoryId = DropCategory.SelectedValue,
+                                CategoryName = DropCategory.SelectedText,
+                                CreatorDisplayName = Security.GetDisplayName(),
+                                CreatorUserId = Guid.Empty,
+                                CreatorUserName = Security.GetUserName(),
+                                DateCreated = DateTime.Now,
+                                Description = DescriptionHtmlEditor.Text.Trim(),
+                                Disabled = false,
+                                DueDate = dueDate,
+                                Estimation = estimation,
+                                Id = IssueId,
+                                IsClosed = false,
+                                IssueTypeId = DropIssueType.SelectedValue,
+                                IssueTypeName = DropIssueType.SelectedText,
+                                IssueTypeImageUrl = string.Empty,
+                                LastUpdate = DateTime.Now,
+                                LastUpdateDisplayName = Security.GetDisplayName(),
+                                LastUpdateUserName = Security.GetUserName(),
+                                MilestoneDueDate = null,
+                                MilestoneId = DropMilestone.SelectedValue,
+                                MilestoneImageUrl = string.Empty,
+                                MilestoneName = DropMilestone.SelectedText,
+                                OwnerDisplayName = DropOwned.SelectedText,
+                                OwnerUserId = Guid.Empty,
+                                OwnerUserName = DropOwned.SelectedValue,
+                                PriorityId = DropPriority.SelectedValue,
+                                PriorityImageUrl = string.Empty,
+                                PriorityName = DropPriority.SelectedText,
+                                Progress = Convert.ToInt32(ProgressSlider.Text),
+                                ProjectCode = string.Empty,
+                                ProjectId = ProjectId,
+                                ProjectName = string.Empty,
+                                ResolutionId = DropResolution.SelectedValue,
+                                ResolutionImageUrl = string.Empty,
+                                ResolutionName = DropResolution.SelectedText,
+                                StatusId = DropStatus.SelectedValue,
+                                StatusImageUrl = string.Empty,
+                                StatusName = DropStatus.SelectedText,
+                                Title = Server.HtmlEncode(TitleTextBox.Text),
+                                TimeLogged = 0,
+                                Visibility = chkPrivate.Checked ? 1 : 0,
+                                Votes = 0
+                            };
 
-
-            if (!IssueManager.SaveIssue(newIssue))
+            if (!IssueManager.SaveOrUpdate(issue))
             {
                 Message1.ShowErrorMessage(Resources.Exceptions.SaveIssueError);
                 return false;
             }
 
-            IssueId = newIssue.Id;
+            IssueId = issue.Id;
 
             if (!CustomFieldManager.SaveCustomFieldValues(IssueId, ctlCustomFields.Values))
             {
@@ -399,13 +414,13 @@ namespace BugNET.Issues
 
 
             //if new issue check if notify owner and assigned is checked.
-            if (NewIssue)
+            if (isNewIssue)
             {
                 //add attachment if present.
                 // get the current file
                 var uploadFile = AspUploadFile.PostedFile;
 
-                var inValidReason = string.Empty;
+                string inValidReason;
 
                 var validFile = IssueAttachmentManager.IsValidFile(uploadFile.FileName, out inValidReason);
 
@@ -453,7 +468,7 @@ namespace BugNET.Issues
 
                 if (chkNotifyOwner.Checked)
                 {
-                    var oUser = UserManager.GetUser(newIssue.OwnerUserName);
+                    var oUser = UserManager.GetUser(issue.OwnerUserName);
                     if (oUser != null)
                     {
                         var notify = new IssueNotification { IssueId = IssueId, NotificationUsername = oUser.UserName};
@@ -461,9 +476,9 @@ namespace BugNET.Issues
                        
                     }
                 }
-                if (chkNotifyAssignedTo.Checked && !string.IsNullOrEmpty(newIssue.AssignedUserName))
+                if (chkNotifyAssignedTo.Checked && !string.IsNullOrEmpty(issue.AssignedUserName))
                 {
-                    var oUser = UserManager.GetUser(newIssue.AssignedUserName);
+                    var oUser = UserManager.GetUser(issue.AssignedUserName);
                     if (oUser != null)
                     {
                         var notify = new IssueNotification { IssueId = IssueId, NotificationUsername = oUser.UserName };
@@ -529,7 +544,7 @@ namespace BugNET.Issues
         /// <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
         protected void lnkDelete_Click(object sender, EventArgs e)
         {
-            IssueManager.DeleteIssue(IssueId);
+            IssueManager.Delete(IssueId);
             ReturnToPreviousPage();
         }
 
@@ -603,9 +618,9 @@ namespace BugNET.Issues
                 //remove closed status' if user does not have access
                 if (!UserManager.HasPermission(ProjectId, Globals.Permission.CloseIssue.ToString()))
                 {
-                    List<Status> status = StatusManager.GetByProjectId(ProjectId).FindAll(st => st.IsClosedState == true);
-                    DropDownList stat = (DropDownList)DropStatus.FindControl("dropStatus");
-                    foreach (Status s in status)
+                    var status = StatusManager.GetByProjectId(ProjectId).FindAll(st => st.IsClosedState);
+                    var stat = (DropDownList)DropStatus.FindControl("dropStatus");
+                    foreach (var s in status)
                         stat.Items.Remove(stat.Items.FindByValue(s.Id.ToString()));
                 }
 
@@ -666,14 +681,8 @@ namespace BugNET.Issues
         /// <value>The issue id.</value>
         int IssueId
         {
-            get
-            {
-                if (ViewState["IssueId"] == null)
-                    return 0;
-                else
-                    return (int)ViewState["IssueId"];
-            }
-            set { ViewState["IssueId"] = value; }
+            get { return ViewState.Get("IssueId", 0); }
+            set { ViewState.Set("IssueId", value); }
         }
 
         /// <summary>
@@ -682,14 +691,8 @@ namespace BugNET.Issues
         /// <value>The project id.</value>
         public override int ProjectId
         {
-            get
-            {
-                if (ViewState["ProjectId"] == null)
-                    return 0;
-                else
-                    return (int)ViewState["ProjectId"];
-            }
-            set { ViewState["ProjectId"] = value; }
+            get { return ViewState.Get("ProjectId", 0); }
+            set { ViewState.Set("ProjectId", value); }
         }
 
         #endregion
