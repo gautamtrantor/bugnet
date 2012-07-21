@@ -63,14 +63,16 @@ namespace BugNET.Administration.Projects
             _wizardSteps.Add("UserControls/ProjectMilestones.ascx");
             _wizardSteps.Add("UserControls/ProjectIssueTypes.ascx");
             _wizardSteps.Add("UserControls/ProjectResolutions.ascx");
-            _wizardSteps.Add("UserControls/ProjectCustomFields.ascx");
-            _wizardSteps.Add("UserControls/ProjectRoles.ascx");
             _wizardSteps.Add("UserControls/ProjectMembers.ascx");
             _wizardSteps.Add("UserControls/NewProjectSummary.ascx");
 
             LoadWizardStep();
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:System.Web.UI.Control.PreRender"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> object that contains the event data.</param>
         protected override void OnPreRender(EventArgs e)
         {
             base.OnPreRender(e);
