@@ -331,6 +331,86 @@ namespace BugNET.Providers.DataProviders
         }
         #endregion
 
+        #region Default issue values methods
+        /// <summary>
+        /// Sets the default issue type by project id.
+        /// </summary>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">projectId</exception>
+        public override bool SetDefaultIssueTypeByProjectId(DefaultValue defaultVal)
+        {
+            // validate Parameters
+            if (defaultVal.ProjectId <= Globals.NEW_ID)
+                throw (new ArgumentOutOfRangeException("projectId"));
+
+            // Execute SQL Command
+            using (var sqlCmd = new SqlCommand())
+            {
+                AddParamToSqlCmd(sqlCmd, "@ReturnValue", SqlDbType.Int, 0, ParameterDirection.ReturnValue, null);
+                AddParamToSqlCmd(sqlCmd, "@ProjectId", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.ProjectId);
+                AddParamToSqlCmd(sqlCmd, "@Type", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.IssueTypeId);
+                AddParamToSqlCmd(sqlCmd, "@StatusId", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.StatusId);
+                AddParamToSqlCmd(sqlCmd, "@IssueOwnerUserName", SqlDbType.NText, 255, ParameterDirection.Input, defaultVal.OwnerUserName);
+                AddParamToSqlCmd(sqlCmd, "@IssuePriorityId", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.PriorityId);
+                AddParamToSqlCmd(sqlCmd, "@IssueAffectedMilestoneId", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.AffectedMilestoneId);
+                AddParamToSqlCmd(sqlCmd, "@IssueAssignedUsername", SqlDbType.NText, 255, ParameterDirection.Input, defaultVal.AssignedUserName);
+                AddParamToSqlCmd(sqlCmd, "@IssueVisibility", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.IssueVisibility);
+                AddParamToSqlCmd(sqlCmd, "@IssueCategoryId", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.CategoryId);
+                AddParamToSqlCmd(sqlCmd, "@IssueDueDate", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.DueDate);
+                AddParamToSqlCmd(sqlCmd, "@IssueProgress", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.Progress);
+                AddParamToSqlCmd(sqlCmd, "@IssueMilestoneId", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.MilestoneId);
+                AddParamToSqlCmd(sqlCmd, "@IssueEstimation", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.Estimation);
+                AddParamToSqlCmd(sqlCmd, "@IssueResolutionId", SqlDbType.Int, 0, ParameterDirection.Input, defaultVal.ResolutionId);
+                AddParamToSqlCmd(sqlCmd, "@StatusVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.StatusVisibility);
+                AddParamToSqlCmd(sqlCmd, "@OwnedByVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.OwnedByVisibility);
+                AddParamToSqlCmd(sqlCmd, "@PriorityVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.PriorityVisibility);
+                AddParamToSqlCmd(sqlCmd, "@AssignedToVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.AssignedToVisibility);
+                AddParamToSqlCmd(sqlCmd, "@PrivateVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.PrivateVisibility);
+                AddParamToSqlCmd(sqlCmd, "@CategoryVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.CategoryVisibility);
+                AddParamToSqlCmd(sqlCmd, "@DueDateVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.DueDateVisibility);
+                AddParamToSqlCmd(sqlCmd, "@TypeVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.TypeVisibility);
+                AddParamToSqlCmd(sqlCmd, "@PercentCompleteVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.PercentCompleteVisibility);
+                AddParamToSqlCmd(sqlCmd, "@MilestoneVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.MilestoneVisibility);
+                AddParamToSqlCmd(sqlCmd, "@EstimationVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.EstimationVisibility);
+                AddParamToSqlCmd(sqlCmd, "@ResolutionVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.ResolutionVisibility);
+                AddParamToSqlCmd(sqlCmd, "@AffectedMilestoneVisibility", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.AffectedMilestoneVisibility);
+                AddParamToSqlCmd(sqlCmd, "@OwnedByNotify", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.OwnedByNotify);
+                AddParamToSqlCmd(sqlCmd, "@AssignedToNotify", SqlDbType.Bit, 0, ParameterDirection.Input, defaultVal.AssignedToNotify);
+
+
+                SetCommandType(sqlCmd, CommandType.StoredProcedure, SP_DEFAULTVALUES_SET);
+                ExecuteScalarCmd(sqlCmd);
+
+                int returnValue = (int)sqlCmd.Parameters["@ReturnValue"].Value;
+                return (returnValue == 0 ? true : false);
+            }
+        }
+
+        /// <summary>
+        /// Gets the default issue type by project id.
+        /// </summary>
+        /// <param name="projectId">The project id.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">projectId</exception>
+        public override List<DefaultValue> GetDefaultIssueTypeByProjectId(int projectId)
+        {
+            // validate Parameters
+            if (projectId <= Globals.NEW_ID)
+                throw (new ArgumentOutOfRangeException("projectId"));
+
+            // Execute SQL Command
+            SqlCommand sqlCmd = new SqlCommand();
+
+            AddParamToSqlCmd(sqlCmd, "@ProjectId", SqlDbType.Int, 0, ParameterDirection.Input, projectId);
+
+            SetCommandType(sqlCmd, CommandType.StoredProcedure, SP_DEFAULTVALUES_GETBYPROJECTID);
+            List<DefaultValue> defaultValueList = new List<DefaultValue>();
+            ExecuteReaderCmd(sqlCmd, TGenerateDefaultValueListFromReader<DefaultValue>, ref defaultValueList);
+            return defaultValueList;
+        }
+        #endregion
+
         #region Host setting methods
         /// <summary>
         /// Gets the host settings.
@@ -784,15 +864,27 @@ namespace BugNET.Providers.DataProviders
         /// <returns></returns>
         public override List<ITUser> GetUsersByProjectId(int projectId)
         {
+            return this.GetUsersByProjectId(projectId, false);
+        }
+
+        /// <summary>
+        /// Gets the users by project id.
+        /// </summary>
+        /// <param name="projectId">The project id.</param>
+        /// <param name="excludeReadOnlyUsers">if set to <c>true</c> [exclude read only users].</param>
+        /// <returns></returns>
+        public override List<ITUser> GetUsersByProjectId(int projectId, bool excludeReadOnlyUsers = true)
+        {
             using (var sqlCmd = new SqlCommand())
             {
                 SetCommandType(sqlCmd, CommandType.StoredProcedure, SP_USER_GETUSERSBYPROJECTID);
 
                 AddParamToSqlCmd(sqlCmd, "@ProjectId", SqlDbType.Int, 0, ParameterDirection.Input, projectId);
+                AddParamToSqlCmd(sqlCmd, "@ExcludeReadonlyUsers", SqlDbType.Bit, 0, ParameterDirection.Input, excludeReadOnlyUsers);
 
                 var userList = new List<ITUser>();
                 ExecuteReaderCmd(sqlCmd, GenerateUserListFromReader, ref userList);
-                return userList;   
+                return userList;
             }
         }
         #endregion
@@ -1250,35 +1342,6 @@ namespace BugNET.Providers.DataProviders
         }
 
         /// <summary>
-        /// Gets the project roadmap.
-        /// </summary>
-        /// <param name="projectId">The project id.</param>
-        /// <returns></returns>
-        public override List<RoadMapIssue> GetProjectRoadmap(int projectId)
-        {
-            if (projectId <= 0) throw (new ArgumentOutOfRangeException("projectId"));
-
-            try
-            {
-                using (var sqlCmd = new SqlCommand())
-                {
-                    AddParamToSqlCmd(sqlCmd, "@ReturnValue", SqlDbType.Int, 0, ParameterDirection.ReturnValue, null);
-                    AddParamToSqlCmd(sqlCmd, "@ProjectId", SqlDbType.Int, 0, ParameterDirection.Input, projectId);
-
-                    SetCommandType(sqlCmd, CommandType.StoredProcedure, SP_PROJECT_GETROADMAP);
-                    var issueList = new List<RoadMapIssue>();
-                    ExecuteReaderCmd(sqlCmd, GenerateRoadmapIssueListFromReader, ref issueList);
-                    return issueList;   
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ProcessException(ex);
-            }
-        }
-
-
-        /// <summary>
         /// Gets the project roadmap progress.
         /// </summary>
         /// <param name="projectId">The project id.</param>
@@ -1322,34 +1385,6 @@ namespace BugNET.Providers.DataProviders
             }
         }
 
-
-        /// <summary>
-        /// Gets the project change log.
-        /// </summary>
-        /// <param name="projectId">The project id.</param>
-        /// <returns></returns>
-        public override List<Issue> GetProjectChangeLog(int projectId)
-        {
-            if (projectId <= 0) throw (new ArgumentOutOfRangeException("projectId"));
-
-            try
-            {
-                using (var sqlCmd = new SqlCommand())
-                {
-                    AddParamToSqlCmd(sqlCmd, "@ReturnValue", SqlDbType.Int, 0, ParameterDirection.ReturnValue, null);
-                    AddParamToSqlCmd(sqlCmd, "@ProjectId", SqlDbType.Int, 0, ParameterDirection.Input, projectId);
-
-                    SetCommandType(sqlCmd, CommandType.StoredProcedure, SP_PROJECT_GETCHANGELOG);
-                    var issueList = new List<Issue>();
-                    ExecuteReaderCmd(sqlCmd, GenerateIssueListFromReader, ref issueList);
-                    return issueList;   
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ProcessException(ex);
-            }
-        }
         #endregion
 
         #region Project notification methods
