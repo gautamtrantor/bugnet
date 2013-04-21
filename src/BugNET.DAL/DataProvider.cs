@@ -59,6 +59,10 @@ namespace BugNET.DAL
         public abstract string GetSelectedIssueColumnsByUserName(string userName, int projectId);
         public abstract void SetSelectedIssueColumnsByUserName(string userName, int projectId, string columns);
 
+        // Default values
+        public abstract List<DefaultValue> GetDefaultIssueTypeByProjectId(int projectId);
+        public abstract bool SetDefaultIssueTypeByProjectId(DefaultValue defaultVal);
+
 
         // Related Issues
         public abstract List<RelatedIssue> GetChildIssues(int issueId);
@@ -134,9 +138,7 @@ namespace BugNET.DAL
         public abstract Project GetProjectByCode(string projectCode);
         public abstract List<Project> GetPublicProjects();
         public abstract bool IsUserProjectMember(string userName, int projectId);
-        public abstract List<RoadMapIssue> GetProjectRoadmap(int projectId);
         public abstract int[] GetProjectRoadmapProgress(int projectId, int milestoneId);
-        public abstract List<Issue> GetProjectChangeLog(int projectId);
         public abstract List<MemberRoles> GetProjectMembersRoles(int projectId);
         public abstract ProjectImage GetProjectImageById(int projectId);
         public abstract bool DeleteProjectImage(int projectId);
@@ -198,6 +200,7 @@ namespace BugNET.DAL
 
         //Users
         public abstract List<ITUser> GetUsersByProjectId(int projectId);
+        public abstract List<ITUser> GetUsersByProjectId(int projectId, bool excludeReadOnlyUsers);
 
         // Role
         public abstract List<Role> GetAllRoles();

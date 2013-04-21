@@ -16,10 +16,7 @@
         private const string SP_PROJECT_GETPROJECTSBYMEMBERUSERNAME = "BugNet_Project_GetProjectsByMemberUserName";
         private const string SP_PROJECT_GETPROJECTBYCODE = "BugNet_Project_GetProjectByCode";
         private const string SP_PROJECT_CLONEPROJECT = "BugNet_Project_CloneProject";
-        private const string SP_PROJECT_GETROADMAP = "BugNet_Project_GetRoadMap";
         private const string SP_PROJECT_GETROADMAPPROGRESS = "BugNet_Project_GetRoadMapProgress";
-        private const string SP_PROJECT_GETCHANGELOG = "BugNet_Project_GetChangeLog";
-
         private const string SP_PROJECT_ISUSERPROJECTMEMBER = "BugNet_Project_IsUserProjectMember";
 
         private const string SP_PROJECTMAILBOX_GETPROJECTBYMAILBOX = "BugNet_ProjectMailbox_GetProjectByMailbox";
@@ -74,6 +71,9 @@
         private const string SP_ISSUE_GETISSUETYPECOUNTBYPROJECT = "BugNet_Issue_GetIssueTypeCountByProject";
         private const string SP_ISSUE_GETISSUECATEGORYCOUNTBYPROJECT = "BugNet_Issue_GetIssueCategoryCountByProject";
         private const string SP_ISSUE_GETOPENISSUES = "BugNet_Issue_GetOpenIssues";
+
+        private const string SP_DEFAULTVALUES_SET = "BugNet_DefaultValues_Set";
+        private const string SP_DEFAULTVALUES_GETBYPROJECTID = "BugNet_DefaultValues_GetByProjectId";
 
         private const string SP_QUERY_GETQUERIESBYUSERNAME = "BugNet_Query_GetQueriesByUsername";
         private const string SP_QUERY_SAVEQUERY = "BugNet_Query_SaveQuery";
