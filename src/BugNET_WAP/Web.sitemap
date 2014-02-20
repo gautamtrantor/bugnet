@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" enableLocalization="true" >
+    <siteMapNode url="~/Default.aspx" resourceKey="Home">
+        <siteMapNode url="~/Login.aspx" resourceKey="Login" Visible="False"  />
+        <siteMapNode url="~/Register.aspx" resourceKey="Register" Visible="False" />
+        <siteMapNode url="~/ForgotPassword.aspx" resourceKey="ForgotPassword" Visible="False"/>
+        <siteMapNode url="~/UserProfile.aspx" resourceKey="UserProfile" Visible="False" />
+        <siteMapNode url="~/Issues/MyIssues.aspx" resourceKey="MyIssues"/>
+        <siteMapNode url="~/Default.aspx?1" resourceKey="Projects">
+            <siteMapNode url="~/Projects/ProjectSummary.aspx" resourceKey="ProjectSummary"/>
+            <siteMapNode url="~/Projects/ProjectCalendar.aspx" resourceKey="ProjectCalendar"/>
+            <siteMapNode url="~/Projects/Roadmap.aspx" resourceKey="Roadmap"/>
+            <siteMapNode url="~/Projects/ChangeLog.aspx" resourceKey="ChangeLog"/>
+            <siteMapNode url="~/SvnBrowse/SubversionBrowser.aspx" resourceKey="SubversionBrowser"/>
+        </siteMapNode>
+        <siteMapNode url="~/Issues/IssueList.aspx" resourceKey="Issues">
+            <siteMapNode url="~/Issues/CreateIssue.aspx" resourceKey="NewIssue"/>
+            <siteMapNode url="~/Issues/IssueDetail.aspx" resourceKey="IssueDetail" Visible="False" />
+            <siteMapNode url="~/Issues/IssueSearch.aspx" resourceKey="IssueSearch" />
+        </siteMapNode>
+        <siteMapNode url="~/Queries/QueryList.aspx" resourceKey="QueryList">
+            <siteMapNode url="~/Queries/QueryDetail.aspx" resourceKey="QueryDetail" />
+        </siteMapNode>
+
+            <siteMapNode url="~/Administration/Admin.aspx" resourceKey="Admin">
+               <siteMapNode url="~/Administration/Projects/ProjectList.aspx" resourceKey="ProjectList">
+                   <siteMapNode url="~/Administration/Projects/AddProject.aspx" resourceKey="AddProject"/>
+                   <siteMapNode url="~/Administration/Projects/EditProject.aspx" resourceKey="EditProject"/>
+            </siteMapNode>
+            <siteMapNode url="~/Administration/Host/LogViewer.aspx" resourceKey="LogViewer"/>
+                <siteMapNode url="~/Administration/Host/Settings.aspx" resourceKey="Settings"/>
+                <siteMapNode url="~/Administration/Users/UserList.aspx" resourceKey="UserList">
+                <siteMapNode url="~/Administration/Users/ManageUser.aspx" resourceKey="ManageUser" Visible="False" />
+                <siteMapNode url="~/Administration/Users/AddUser.aspx" resourceKey="AddUser"/>
+            </siteMapNode>
+        </siteMapNode>
+    </siteMapNode>
+</siteMap>
