@@ -32,108 +32,88 @@
                 <asp:Repeater ID="rptProject" runat="Server">
                     <ItemTemplate>
                         <div class="row">
-                            <div class="col-md-10">
-                                <h3>
+                            <div class="col-md-2 col-sm-3 text-center">
+                                <a href="Projects/ProjectSummary.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
+                                    <asp:Image runat="server" AlternateText="<%# ((Project)Container.DataItem).Name %>" ID="ProjectImage" />
+                                </a>
+                            </div>
+                            <div class="col-md-10 col-sm-9">
+                                <h3 style="margin-top: 5px; margin-bottom: 3px;">
                                     <a href="Projects/ProjectSummary.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
                                         <%#((Project)Container.DataItem).Name%>
                                         <span>(<%#((Project)Container.DataItem).Code%>)</span>
                                     </a>
 
                                     <ul id="multicol-menu" class="nav pull-right">
-                                    <li class="dropdown">
-                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                            <asp:Localize runat="server" ID="Filters" Text="Quick Links / Filters" meta:resourcekey="QuickLinksFilters" />
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <div class="row" style="width: 350px; padding: 10px;">
-                                                    <ul class="list-unstyled col-md-6">
-                                                        <li role="presentation" class="dropdown-header">Quick Links</li>
-                                                        <li>
-                                                            <a href="Projects/ProjectSummary.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
-                                                                <asp:Localize runat="server" ID="Localize33" Text="Project Summary" meta:resourcekey="ProjectSummary" /></a></li>
-                                                        <li>
-                                                            <a href="Queries/QueryList.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
-                                                                <asp:Localize runat="server" ID="Localize4" Text="<%$ Resources:SharedResources, Queries %>" /></a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="Projects/ChangeLog.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
-                                                                <asp:Localize runat="server" ID="Localize5" Text="<%$ Resources:SharedResources, ChangeLog %>" /></a></li>
-                                                        <li>
-                                                            <a href="Projects/Roadmap.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
-                                                                <asp:Localize runat="server" ID="Localize6" Text="<%$ Resources:SharedResources, Roadmap %>" /></a></li>
-                                                        <li id="ProjectCalendar" runat="server">
-                                                            <a href="Projects/ProjectCalendar.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
-                                                                <asp:Localize runat="server" ID="Localize7" Text="<%$ Resources:SharedResources, Calendar %>" /></a></li>
-                                                        <li id="ReportIssue" runat="server">
-                                                            <a href="Issues/CreateIssue.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
-                                                                <asp:Localize runat="server" ID="Localize8" Text="<%$ Resources:SharedResources, NewIssue %>" /></a></li>
-                                                        <li id="Settings" runat="server">
-                                                            <a href="Administration/Projects/EditProject.aspx?pid=<%# ((Project)Container.DataItem).Id %>&amp;tid=1">
-                                                                <asp:Localize runat="server" ID="Localize9" Text="<%$ Resources:SharedResources, EditProject %>" /></a></li>
-                                                    </ul>
-                                                    <ul class="list-unstyled col-md-6">
-                                                        <li role="presentation" class="dropdown-header">Filters</li>
-                                                        <li><a href='Issues/IssueList.aspx?pid=<%# ((Project)Container.DataItem).Id %>'>
-                                                            <asp:Label ID="Label1" runat="server" Text="All" meta:resourcekey="lblAll" /></a></li>
-                                                        <li><a href="Issues/IssueList.aspx?pid=<%# ((Project)Container.DataItem).Id %>&amp;cr=1">
-                                                            <asp:Localize runat="server" ID="Localize10" Text="Created Recently" meta:resourcekey="CreatedRecently" /></a></li>
-                                                        <li><a href="Issues/IssueList.aspx?pid=<%# ((Project)Container.DataItem).Id %>&amp;ur=1">
-                                                            <asp:Localize runat="server" ID="Localize11" Text="Updated Recently" meta:resourcekey="UpdatedRecently" /></a></li>
-                                                        <li id="AssignedUserFilter" runat="server">
-                                                            <asp:HyperLink ID="AssignedToUser" runat="server" meta:resourcekey="AssignedToUser">Assigned to me</asp:HyperLink></li>
-                                                    </ul>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                        <li class="dropdown">
+                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                                <span class="glyphicon glyphicon-list"></span>
+                                                <%--<asp:Localize runat="server" ID="Filters" Text="Quick Links / Filters" meta:resourcekey="QuickLinksFilters" />--%>
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <div class="row" style="width: 350px; padding: 10px;">
+                                                        <ul class="list-unstyled col-md-6">
+                                                            <li role="presentation" class="dropdown-header">Quick Links</li>
+                                                            <li>
+                                                                <a href="Projects/ProjectSummary.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
+                                                                    <asp:Localize runat="server" ID="Localize33" Text="Project Summary" meta:resourcekey="ProjectSummary" /></a></li>
+                                                            <li>
+                                                                <a href="Queries/QueryList.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
+                                                                    <asp:Localize runat="server" ID="Localize4" Text="<%$ Resources:SharedResources, Queries %>" /></a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="Projects/ChangeLog.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
+                                                                    <asp:Localize runat="server" ID="Localize5" Text="<%$ Resources:SharedResources, ChangeLog %>" /></a></li>
+                                                            <li>
+                                                                <a href="Projects/Roadmap.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
+                                                                    <asp:Localize runat="server" ID="Localize6" Text="<%$ Resources:SharedResources, Roadmap %>" /></a></li>
+                                                            <li id="ProjectCalendar" runat="server">
+                                                                <a href="Projects/ProjectCalendar.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
+                                                                    <asp:Localize runat="server" ID="Localize7" Text="<%$ Resources:SharedResources, Calendar %>" /></a></li>
+                                                            <li id="ReportIssue" runat="server">
+                                                                <a href="Issues/CreateIssue.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
+                                                                    <asp:Localize runat="server" ID="Localize8" Text="<%$ Resources:SharedResources, NewIssue %>" /></a></li>
+                                                            <li id="Settings" runat="server">
+                                                                <a href="Administration/Projects/EditProject.aspx?pid=<%# ((Project)Container.DataItem).Id %>&amp;tid=1">
+                                                                    <asp:Localize runat="server" ID="Localize9" Text="<%$ Resources:SharedResources, EditProject %>" /></a></li>
+                                                        </ul>
+                                                        <ul class="list-unstyled col-md-6">
+                                                            <li role="presentation" class="dropdown-header">Filters</li>
+                                                            <li><a href='Issues/IssueList.aspx?pid=<%# ((Project)Container.DataItem).Id %>'>
+                                                                <asp:Label ID="Label1" runat="server" Text="All" meta:resourcekey="lblAll" /></a></li>
+                                                            <li><a href="Issues/IssueList.aspx?pid=<%# ((Project)Container.DataItem).Id %>&amp;cr=1">
+                                                                <asp:Localize runat="server" ID="Localize10" Text="Created Recently" meta:resourcekey="CreatedRecently" /></a></li>
+                                                            <li><a href="Issues/IssueList.aspx?pid=<%# ((Project)Container.DataItem).Id %>&amp;ur=1">
+                                                                <asp:Localize runat="server" ID="Localize11" Text="Updated Recently" meta:resourcekey="UpdatedRecently" /></a></li>
+                                                            <li id="AssignedUserFilter" runat="server">
+                                                                <asp:HyperLink ID="AssignedToUser" runat="server" meta:resourcekey="AssignedToUser">Assigned to me</asp:HyperLink></li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
                                 </h3>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 text-center">
-                                <a href="Projects/ProjectSummary.aspx?pid=<%# ((Project)Container.DataItem).Id %>">
-                                    <asp:Image CssClass="img-rounded thumbnail" runat="server" AlternateText="<%# ((Project)Container.DataItem).Name %>" ID="ProjectImage" />
-                                </a>
-                            </div>
-                            <div class="col-md-8 col-sm-8">
-
-                                
-                                
-
+                                <small style="color: #999999;">
+                                    <asp:Localize runat="server" ID="Localize2" Text="Managed By" meta:resourcekey="ManagedBy" />
+                                    <%#((Project)Container.DataItem).ManagerDisplayName%>
+                                </small>
                                 <p>
                                     <%#Server.HtmlDecode(((Project)Container.DataItem).Description)%>
                                 </p>
+                                <p style="color: #999999;">
+                                    <small>
+                                        <asp:Label ID="OpenIssues" runat="Server" />
+                                        |
+                                        <asp:Label ID="NextMilestoneDue" runat="Server" />
+                                        |
+                                        <asp:Label ID="MilestoneComplete" CssClass="progressBar" runat="Server" />
+                                    </small>
+                                </p>
                             </div>
                         </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <%--<div>
-                                        <span class="badge">Posted 2012-08-02 20:47:04</span><div class="pull-right">
-                                            <span class="label label-default">alice</span> <span class="label label-primary">story</span> <span class="label label-success">blog</span> <span class="label label-info">personal</span> <span class="label label-warning">Warning</span>
-                                            <span class="label label-danger">Danger</span>
-                                        </div>
-                                    </div>--%>
-                                    <p>
-                                        <span class="glyphicon glyphicon-user"></span> <asp:Localize runat="server" ID="Localize2" Text="Managed By" meta:resourcekey="ManagedBy" />
-                                    <%#((Project)Container.DataItem).ManagerDisplayName%>
-                                        | 
-                                    <ul class="list-inline">
-                                        <li>
-                                            <asp:Label CssClass="label label-default" ID="OpenIssues" runat="Server" /></li>
-                                        <li>
-                                            <asp:Label ID="NextMilestoneDue" CssClass="label label-success" runat="Server" /></li>
-                                        <li>
-                                            <asp:Label ID="MilestoneComplete" CssClass="progressBar" runat="Server" /></li>
-                                    
-                                    </ul>
-                                        </p>
-                                </div>
-
-                            </div>
-                        
                         <hr>
                     </ItemTemplate>
                 </asp:Repeater>

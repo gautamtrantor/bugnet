@@ -146,7 +146,7 @@
     </div>
 
     <asp:Panel ID="SelectColumnsPanel" Visible="False" runat="Server">
-        <div id="ChangeColumns">
+        <div id="ChangeColumns" style="display:none;">
             <h4><asp:Literal ID="Literal3" runat="server" meta:resourcekey="SelectColumnsLiteral"></asp:Literal></h4>
             <div>
                 <asp:CheckBoxList ID="lstIssueColumns" Width="100%" CssClass="checkbox-list" RepeatColumns="7" CellPadding="0" CellSpacing="0" runat="server" RepeatDirection="Horizontal">
@@ -370,8 +370,8 @@
 <div class="pager">
     <asp:DataPager ID="pager" runat="server" PageSize="10" PagedControlID="gvIssues">
         <Fields>
-            <BNWC:BugNetPagerField NextPageImageUrl="~/App_Themes/Default/Images/resultset_next.gif" PreviousPageImageUrl="~/App_Themes/Default/Images/resultset_previous.gif"
-                LastPageImageUrl="~/App_Themes/Default/Images/resultset_last.gif" FirstPageImageUrl="~/App_Themes/Default/Images/resultset_first.gif" />
+            <BNWC:BugNetPagerField NextPageImageUrl="~/Images/resultset_next.gif" PreviousPageImageUrl="~/Images/resultset_previous.gif"
+                LastPageImageUrl="~/Images/resultset_last.gif" FirstPageImageUrl="~/Images/resultset_first.gif" />
         </Fields>
     </asp:DataPager>
 </div>

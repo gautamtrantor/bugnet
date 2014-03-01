@@ -1,4 +1,8 @@
-﻿using System;
+﻿using BugNET.BLL;
+using BugNET.Common;
+using BugNET.UserInterfaceLayer;
+using BugNET.UserInterfaceLayer.WebControls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -67,7 +71,44 @@ namespace BugNET
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            var oHelper = new SuckerFishMenuHelper(ProjectId);
+            litMenu.Text = oHelper.GetHtml();
 
+            if (HostSettingManager.Get(HostSettingNames.EnableGravatar, true))
+            {
+                var user = Membership.GetUser(Security.GetUserName());
+                if (user != null)
+                {
+                    Image img =  (System.Web.UI.WebControls.Image)LoginView1.FindControl("Avatar");
+                    img.ImageUrl = PresentationUtils.GetGravatarImageUrl(user.Email, 32);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the project Id from the base page class
+        /// </summary>
+        public int ProjectId
+        {
+            get
+            {
+                try
+                {
+                    // do the as test to to see if the basepage is the same as page
+                    // if not the page parameter will be null and no exception will be thrown
+                    var page = Page as UserInterfaceLayer.BasePage;
+
+                    if (page != null)
+                    {
+                        return page.ProjectId;
+                    }
+                    return -1;
+                }
+                catch
+                {
+                    return -1;
+                }
+            }
         }
     }
 }
