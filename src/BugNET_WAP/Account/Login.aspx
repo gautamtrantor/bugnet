@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-8">
             <section id="loginForm">
-                <asp:Login runat="server" ViewStateMode="Disabled" RenderOuterTable="false">
+                <asp:Login ID="LoginView" runat="server" ViewStateMode="Disabled" RenderOuterTable="false" DestinationPageUrl="~/Default">
                     <LayoutTemplate>
                         <div class="form-horizontal">
                             <h4><asp:Localize runat="server" meta:resourceKey="UseLocalAccount" Text="[Resource Required]"/></h4>
@@ -41,15 +41,19 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
-                                    <asp:Button runat="server" CommandName="Login" CssClass="btn btn-primary" meta:resourceKey="LoginButton" Text="[Resource Required]" />
+                                    <asp:Button id="LoginButton" runat="server" CommandName="Login"  CssClass="btn btn-primary" meta:resourceKey="LoginButton" Text="[Resource Required]" />
                                 </div>
                             </div>
                         </div>
                   </LayoutTemplate>
                 </asp:Login>
                 <p>
+                    <asp:HyperLink ID="PasswordRecoveryLink" runat="server" meta:resourcekey="PasswordRecoveryLink" NavigateUrl="~/Account/ForgotPassword">Forgot your password?</asp:HyperLink>
+                </p>
+                <p>
                      <asp:Localize runat="server" ID="Register_Localize" />
                 </p>
+                
             </section>
         </div>
 
