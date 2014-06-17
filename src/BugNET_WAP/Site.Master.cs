@@ -57,6 +57,7 @@ namespace BugNET
                 // Set Anti-XSRF token
                 ViewState[AntiXsrfTokenKey] = Page.ViewStateUserKey;
                 ViewState[AntiXsrfUserNameKey] = Context.User.Identity.Name ?? String.Empty;
+                Version.Text = String.Format("{0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
             else
             {
@@ -71,6 +72,12 @@ namespace BugNET
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if(Convert.ToInt32(HostSettingManager.Get(HostSettingNames.UserRegistration)) == (int)UserRegistration.None)
+            {
+                if (LoginView1.FindControl("RegisterLink") != null)
+                    LoginView1.FindControl("RegisterLink").Visible = false;
+            }
+
             var oHelper = new SuckerFishMenuHelper(ProjectId);
             litMenu.Text = oHelper.GetHtml();
 

@@ -18,7 +18,7 @@
                 <div class="jumbotron" id="BlankSlate" runat="server" visible="false">
                     <h1><asp:Localize ID="WelcomeLocalize" Text="Welcome to BugNET!" meta:resourceKey="WelcomeMessageHeader" runat="server" /></h1>
                     <p><asp:Localize ID="StartWorkLocalize" Text="[Resource Required]" meta:resourceKey="NoProjects" runat="server"/></p>
-                    <ol>
+                    <ol class="unstyled">
                         <li><asp:Localize runat="server" ID="Step1_Localize" /></li>
                         <li><asp:Localize runat="server" ID="Step2_Localize" /></li>
                         <li><asp:Localize runat="server" ID="Step3_Localize" /></li>
@@ -34,7 +34,7 @@
                         <div class="row">
                             <div class="col-md-2 col-sm-3 text-center">
                                 <a href="Projects/ProjectSummary/<%# ((Project)Container.DataItem).Id %>">
-                                    <asp:Image runat="server" AlternateText="<%# ((Project)Container.DataItem).Name %>" ID="ProjectImage" />
+                                    <asp:Image runat="server" AlternateText="<%# ((Project)Container.DataItem).Name %>" ID="ProjectImage" Height="90"  Width="90"/>
                                 </a>
                             </div>
                             <div class="col-md-10 col-sm-9">
