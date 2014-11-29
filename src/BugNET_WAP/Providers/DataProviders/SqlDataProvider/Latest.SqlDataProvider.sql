@@ -707,7 +707,7 @@ DROP INDEX [IX_BugNet_RelatedIssues]
 
 
 GO
-PRINT N'Dropping on [dbo].[BugNet_UserProfiles].[ReceiveEmailNotifications]...';
+PRINT N'Dropping unnamed constraint on [dbo].[BugNet_UserProfiles]...';
 
 
 GO
@@ -723,7 +723,7 @@ ALTER TABLE [dbo].[BugNet_DefaultValuesVisibility] DROP CONSTRAINT [DF_Bugnet_De
 
 
 GO
-PRINT N'Dropping on [dbo].[BugNet_ProjectCategories].[Disabled]...';
+PRINT N'Dropping unnamed constraint on [dbo].[BugNet_ProjectCategories]...';
 
 
 GO
@@ -731,7 +731,7 @@ ALTER TABLE [dbo].[BugNet_ProjectCategories] DROP CONSTRAINT [DF__BugNet_Pr__Dis
 
 
 GO
-PRINT N'Dropping on [dbo].[BugNet_ProjectMilestones].[MilestoneCompleted]...';
+PRINT N'Dropping unnamed constraint on [dbo].[BugNet_ProjectMilestones]...';
 
 
 GO
@@ -739,7 +739,7 @@ ALTER TABLE [dbo].[BugNet_ProjectMilestones] DROP CONSTRAINT [DF__BugNet_Pr__Mil
 
 
 GO
-PRINT N'Dropping on [dbo].[BugNet_UserProjects].[SelectedIssueColumns]...';
+PRINT N'Dropping unnamed constraint on [dbo].[BugNet_UserProjects]...';
 
 
 GO
@@ -752,19 +752,19 @@ PRINT N'Altering [dbo].[BugNet_DefaultValuesVisibility]...';
 
 GO
 ALTER TABLE [dbo].[BugNet_DefaultValuesVisibility]
-    ADD [StatusEditVisibility]            BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_StatusEditVisibility] DEFAULT ((1)) NOT NULL,
-        [OwnedByEditVisibility]           BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_OwnedByEditVisibility] DEFAULT ((1)) NOT NULL,
-        [PriorityEditVisibility]          BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_PriorityEditVisibility] DEFAULT ((1)) NOT NULL,
-        [AssignedToEditVisibility]        BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_AssignedToEditVisibility] DEFAULT ((1)) NOT NULL,
-        [PrivateEditVisibility]           BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_PrivateEditVisibility] DEFAULT ((1)) NOT NULL,
-        [CategoryEditVisibility]          BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_CategoryEditVisibility] DEFAULT ((1)) NOT NULL,
-        [DueDateEditVisibility]           BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_DueDateEditVisibility] DEFAULT ((1)) NOT NULL,
-        [TypeEditVisibility]              BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_TypeEditVisibility] DEFAULT ((1)) NOT NULL,
-        [PercentCompleteEditVisibility]   BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_PercentCompleteEditVisibility] DEFAULT ((1)) NOT NULL,
-        [MilestoneEditVisibility]         BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_MilestoneEditVisibility] DEFAULT ((1)) NOT NULL,
-        [EstimationEditVisibility]        BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_EstimationEditVisibility] DEFAULT ((1)) NOT NULL,
-        [ResolutionEditVisibility]        BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_ResolutionEditVisibility] DEFAULT ((1)) NOT NULL,
-        [AffectedMilestoneEditVisibility] BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_AffectedMilestoneEditVisibility] DEFAULT ((1)) NOT NULL;
+    ADD [StatusEditVisibility]            BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_StatusEditVisibility] DEFAULT (1) NOT NULL,
+        [OwnedByEditVisibility]           BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_OwnedByEditVisibility] DEFAULT (1) NOT NULL,
+        [PriorityEditVisibility]          BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_PriorityEditVisibility] DEFAULT (1) NOT NULL,
+        [AssignedToEditVisibility]        BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_AssignedToEditVisibility] DEFAULT (1) NOT NULL,
+        [PrivateEditVisibility]           BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_PrivateEditVisibility] DEFAULT (1) NOT NULL,
+        [CategoryEditVisibility]          BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_CategoryEditVisibility] DEFAULT (1) NOT NULL,
+        [DueDateEditVisibility]           BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_DueDateEditVisibility] DEFAULT (1) NOT NULL,
+        [TypeEditVisibility]              BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_TypeEditVisibility] DEFAULT (1) NOT NULL,
+        [PercentCompleteEditVisibility]   BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_PercentCompleteEditVisibility] DEFAULT (1) NOT NULL,
+        [MilestoneEditVisibility]         BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_MilestoneEditVisibility] DEFAULT (1) NOT NULL,
+        [EstimationEditVisibility]        BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_EstimationEditVisibility] DEFAULT (1) NOT NULL,
+        [ResolutionEditVisibility]        BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_ResolutionEditVisibility] DEFAULT (1) NOT NULL,
+        [AffectedMilestoneEditVisibility] BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_AffectedMilestoneEditVisibility] DEFAULT (1) NOT NULL;
 
 
 GO
@@ -851,12 +851,12 @@ ALTER TABLE [dbo].[BugNet_ProjectMilestones]
 
 
 GO
-PRINT N'Creating [dbo].[DF__BugNet_Us__Selec__7E42ABEE]...';
+PRINT N'Creating [dbo].[DF_BugNet_UserProjects_SelectedIssueColumns]...';
 
 
 GO
 ALTER TABLE [dbo].[BugNet_UserProjects]
-    ADD CONSTRAINT [DF__BugNet_Us__Selec__7E42ABEE] DEFAULT ((0)) FOR [SelectedIssueColumns];
+    ADD CONSTRAINT [DF_BugNet_UserProjects_SelectedIssueColumns] DEFAULT ((0)) FOR [SelectedIssueColumns];
 
 
 GO
@@ -1393,11 +1393,11 @@ EXECUTE sp_refreshsqlmodule N'[dbo].[BugNet_ProjectNotification_GetProjectNotifi
 
 
 GO
-PRINT N'Refreshing [dbo].[BugNet_ProjectNotification_GetProjectNotificationsByUsername]...';
+PRINT N'Refreshing [dbo].[BugNet_ProjectNotification_GetProjectNotificationsByUserName]...';
 
 
 GO
-EXECUTE sp_refreshsqlmodule N'[dbo].[BugNet_ProjectNotification_GetProjectNotificationsByUsername]';
+EXECUTE sp_refreshsqlmodule N'[dbo].[BugNet_ProjectNotification_GetProjectNotificationsByUserName]';
 
 
 GO
@@ -1593,11 +1593,11 @@ EXECUTE sp_refreshsqlmodule N'[dbo].[BugNet_Project_GetProjectById]';
 
 
 GO
-PRINT N'Refreshing [dbo].[BugNet_Project_GetProjectsByMemberUsername]...';
+PRINT N'Refreshing [dbo].[BugNet_Project_GetProjectsByMemberUserName]...';
 
 
 GO
-EXECUTE sp_refreshsqlmodule N'[dbo].[BugNet_Project_GetProjectsByMemberUsername]';
+EXECUTE sp_refreshsqlmodule N'[dbo].[BugNet_Project_GetProjectsByMemberUserName]';
 
 
 GO
