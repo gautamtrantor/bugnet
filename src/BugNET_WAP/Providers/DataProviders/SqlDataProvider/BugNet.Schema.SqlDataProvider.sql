@@ -683,14 +683,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[BugNet_UserProfiles](
-	[UserName] [nvarchar](50) NOT NULL,
+	[UserName] [nvarchar](256) NOT NULL,
 	[FirstName] [nvarchar](100) NULL,
 	[LastName] [nvarchar](100) NULL,
 	[DisplayName] [nvarchar](100) NULL,
 	[IssuesPageSize] [int] NULL,
 	[PreferredLocale] [nvarchar](50) NULL,
 	[LastUpdate] [datetime] NOT NULL,
-	[SelectedIssueColumns] [nvarchar](50) NULL,
+	[SelectedIssueColumns] [nvarchar](100) NULL,
 	[ReceiveEmailNotifications] [bit] NOT NULL,
 	[PasswordVerificationToken] [nvarchar](128) NULL,
 	[PasswordVerificationTokenExpirationDate] [datetime] NULL,
