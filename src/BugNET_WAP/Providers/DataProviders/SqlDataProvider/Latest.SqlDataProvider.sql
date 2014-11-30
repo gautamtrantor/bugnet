@@ -768,62 +768,7 @@ ALTER TABLE [dbo].[BugNet_DefaultValuesVisibility]
 
 
 GO
-PRINT N'Starting rebuilding table [dbo].[BugNet_UserProfiles]...';
 
-
-GO
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-
-SET XACT_ABORT ON;
-
-CREATE TABLE [dbo].[tmp_ms_xx_BugNet_UserProfiles] (
-    [UserName]                                NVARCHAR (50)  NOT NULL,
-    [FirstName]                               NVARCHAR (100) NULL,
-    [LastName]                                NVARCHAR (100) NULL,
-    [DisplayName]                             NVARCHAR (100) NULL,
-    [IssuesPageSize]                          INT            NULL,
-    [PreferredLocale]                         NVARCHAR (50)  NULL,
-    [LastUpdate]                              DATETIME       NOT NULL,
-    [SelectedIssueColumns]                    NVARCHAR (50)  NULL,
-    [ReceiveEmailNotifications]               BIT            CONSTRAINT [DF_BugNet_UserProfiles_RecieveEmailNotifications] DEFAULT ((1)) NOT NULL,
-    [PasswordVerificationToken]               NVARCHAR (128) NULL,
-    [PasswordVerificationTokenExpirationDate] DATETIME       NULL,
-    CONSTRAINT [tmp_ms_xx_constraint_PK_BugNet_UserProfiles] PRIMARY KEY CLUSTERED ([UserName] ASC)
-);
-
-IF EXISTS (SELECT TOP 1 1 
-           FROM   [dbo].[BugNet_UserProfiles])
-    BEGIN
-        INSERT INTO [dbo].[tmp_ms_xx_BugNet_UserProfiles] ([UserName], [FirstName], [LastName], [DisplayName], [IssuesPageSize], [PreferredLocale], [LastUpdate], [SelectedIssueColumns], [ReceiveEmailNotifications], [PasswordVerificationToken], [PasswordVerificationTokenExpirationDate])
-        SELECT   [UserName],
-                 [FirstName],
-                 [LastName],
-                 [DisplayName],
-                 [IssuesPageSize],
-                 [PreferredLocale],
-                 [LastUpdate],
-                 [SelectedIssueColumns],
-                 [ReceiveEmailNotifications],
-                 [PasswordVerificationToken],
-                 [PasswordVerificationTokenExpirationDate]
-        FROM     [dbo].[BugNet_UserProfiles]
-        ORDER BY [UserName] ASC;
-    END
-
-DROP TABLE [dbo].[BugNet_UserProfiles];
-
-EXECUTE sp_rename N'[dbo].[tmp_ms_xx_BugNet_UserProfiles]', N'BugNet_UserProfiles';
-
-EXECUTE sp_rename N'[dbo].[tmp_ms_xx_constraint_PK_BugNet_UserProfiles]', N'PK_BugNet_UserProfiles', N'OBJECT';
-
-COMMIT TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
-
-
-GO
 PRINT N'Creating [dbo].[DF_Bugnet_DefaultValuesVisibility_AffectedMilestoneVisibility]...';
 
 
