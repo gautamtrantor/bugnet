@@ -689,64 +689,6 @@ INSERT INTO [dbo].[BugNet_HostSettings] ([SettingName], [SettingValue]) VALUES('
 INSERT INTO [dbo].[BugNet_HostSettings] ([SettingName], [SettingValue]) VALUES('GoogleClientSecret', '')
 GO
 
-PRINT N'Dropping [dbo].[BugNet_Languages].[IX_BugNet_Languages]...';
-
-
-GO
-DROP INDEX [IX_BugNet_Languages]
-    ON [dbo].[BugNet_Languages];
-
-
-GO
-PRINT N'Dropping [dbo].[BugNet_RelatedIssues].[IX_BugNet_RelatedIssues]...';
-
-
-GO
-DROP INDEX [IX_BugNet_RelatedIssues]
-    ON [dbo].[BugNet_RelatedIssues];
-
-
-GO
-PRINT N'Dropping unnamed constraint on [dbo].[BugNet_UserProfiles]...';
-
-
-GO
-ALTER TABLE [dbo].[BugNet_UserProfiles] DROP CONSTRAINT [DF__BugNet_Us__Recei__56D3D912];
-
-
-GO
-PRINT N'Dropping [dbo].[DF_Bugnet_DefaultValuesVisibility_AffectedMilestoneVisivility]...';
-
-
-GO
-ALTER TABLE [dbo].[BugNet_DefaultValuesVisibility] DROP CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_AffectedMilestoneVisivility];
-
-
-GO
-PRINT N'Dropping unnamed constraint on [dbo].[BugNet_ProjectCategories]...';
-
-
-GO
-ALTER TABLE [dbo].[BugNet_ProjectCategories] DROP CONSTRAINT [DF__BugNet_Pr__Disab__1ABEEF0B];
-
-
-GO
-PRINT N'Dropping unnamed constraint on [dbo].[BugNet_ProjectMilestones]...';
-
-
-GO
-ALTER TABLE [dbo].[BugNet_ProjectMilestones] DROP CONSTRAINT [DF__BugNet_Pr__Miles__131DCD43];
-
-
-GO
-PRINT N'Dropping unnamed constraint on [dbo].[BugNet_UserProjects]...';
-
-
-GO
-ALTER TABLE [dbo].[BugNet_UserProjects] DROP CONSTRAINT [DF__BugNet_Us__Selec__2DD1C37F];
-
-
-GO
 PRINT N'Altering [dbo].[BugNet_DefaultValuesVisibility]...';
 
 
@@ -765,43 +707,6 @@ ALTER TABLE [dbo].[BugNet_DefaultValuesVisibility]
         [EstimationEditVisibility]        BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_EstimationEditVisibility] DEFAULT (1) NOT NULL,
         [ResolutionEditVisibility]        BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_ResolutionEditVisibility] DEFAULT (1) NOT NULL,
         [AffectedMilestoneEditVisibility] BIT CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_AffectedMilestoneEditVisibility] DEFAULT (1) NOT NULL;
-
-
-GO
-
-PRINT N'Creating [dbo].[DF_Bugnet_DefaultValuesVisibility_AffectedMilestoneVisibility]...';
-
-
-GO
-ALTER TABLE [dbo].[BugNet_DefaultValuesVisibility]
-    ADD CONSTRAINT [DF_Bugnet_DefaultValuesVisibility_AffectedMilestoneVisibility] DEFAULT ((1)) FOR [AffectedMilestoneVisibility];
-
-
-GO
-PRINT N'Creating [dbo].[DF_BugNet_ProjectCategories_Disabled]...';
-
-
-GO
-ALTER TABLE [dbo].[BugNet_ProjectCategories]
-    ADD CONSTRAINT [DF_BugNet_ProjectCategories_Disabled] DEFAULT ((0)) FOR [Disabled];
-
-
-GO
-PRINT N'Creating [dbo].[DF_BugNet_ProjectMilestones_Completed]...';
-
-
-GO
-ALTER TABLE [dbo].[BugNet_ProjectMilestones]
-    ADD CONSTRAINT [DF_BugNet_ProjectMilestones_Completed] DEFAULT ((0)) FOR [MilestoneCompleted];
-
-
-GO
-PRINT N'Creating [dbo].[DF_BugNet_UserProjects_SelectedIssueColumns]...';
-
-
-GO
-ALTER TABLE [dbo].[BugNet_UserProjects]
-    ADD CONSTRAINT [DF_BugNet_UserProjects_SelectedIssueColumns] DEFAULT ((0)) FOR [SelectedIssueColumns];
 
 
 GO
